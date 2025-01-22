@@ -4,7 +4,7 @@ ORG 0
 
 BITS 16 ; setam modul de lucru pe 16 biti (real-mode)
 
-; daca avem originea pe 0, trebuie sa sarim 
+; daca avem originea pe 0, trebuie sa sarim un "far jump" - segment:offset (start devine offset local in CS)
 jmp 0x7c0:start
 
 ; pornim start label
