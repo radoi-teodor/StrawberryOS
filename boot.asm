@@ -17,6 +17,46 @@ start:
     ; daca avem originea pe 0, trebuie sa sarim un "far jump" - segment:offset (start devine offset local in CS)
     jmp 0x7c0:step2
 
+read_disk:
+
+    %if 0 ; Pastram documentatia citirii de pe disk in rutina de citire
+    AH = 02h
+    AL = number of sectors to read (must be nonzero)
+    CH = low eight bits of cylinder number
+    CL = sector number 1-63 (bits 0-5)
+    high two bits of cylinder (bits 6-7, hard disk only)
+    DH = head number
+    DL = drive number (bit 7 set for hard disk)
+    ES:BX -> data buffer
+
+    Return:
+    CF set on error
+    if AH = 11h (corrected ECC error), AL = burst length
+    CF clear if successful
+    AH = status (see #00234)
+    AL = number of sectors transferred (only valid if CF set for some
+    BIOSes)
+    %endif ; 0
+
+    mov ah, 02h
+    mov al, 1 ; citim un sector
+    mov ch, 0 ; cilindrul 0
+    mov cl, 2 ; citim al doilea sector (nu se numeroteaza de la 0)
+    mov dh, 0 ; numarul disk-ului de pe care citim - 0
+    mov bx, buffer ; setam registrul de output BX pe adresa buffer-ului creat pentru stocarea memoriei citite
+    int 0x13 ; apelam interuperea pentru citire de pe disk
+
+    jc error ; jc - jump daca exista eroare
+
+    mov si, buffer
+    call print
+    jmp $
+
+error:
+    mov si, error_mesage
+    call print
+    jmp $
+
 ; implementam propria intrerupere 0
 handle_zero:
     ; vom afisa 'A' pe ecran
@@ -49,6 +89,7 @@ step2:
 
     sti ; activam intreruperile
 
+    %if 0 ; Vom dezactiva intreruperile custom, pentru a pastra codul curat, dar le pastram pentru DEMO
     ; adaugam intreruperile custom
     ; intreruperea 0
     mov word[ss:0x00], handle_zero ; la adresa 0 din memoria RAM vom arunca in offset-ul intreruperii 0, adresa label-ului `handle_zero`
@@ -67,6 +108,10 @@ step2:
 
     ; apelam intreruperea 1
     int 1
+    %endif ; 0
+
+    ; citim de pe disk
+    call read_disk
 
     ; afisam Hello World!
     mov si, message ; mutam mesajul in registrul sursa (si - source register)
@@ -92,6 +137,8 @@ print_char:
     int 0x10
     ret
 
+error_mesage: db 'Failed to load sector' ; declaram un mesaj de eroare pentru citirea de pe disk
+
 message: db 'Hello World!', 0 ; declaram variabila `message` cu valoarea `Hello World!`
 
 ; times afiseaza de un numar de ori o valoare - vom umple pana la 512 bytes cu valoarea 0
@@ -99,3 +146,7 @@ times 510-($ - $$) db 0
 dw 0xAA55 ; semnatura de bootloader (vezi mai jos):
 ; push bp
 ; stosb
+
+; tot ce este dupa este considerat dupa boot sector
+; vom folosi acest label pentru a scrie datele citite din disk
+buffer:
