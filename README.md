@@ -4,6 +4,18 @@ Vom avea nevoie de:
 - QEMU
 
 Codul va fi cat se poate de comentat pentru a putea servi ca referinta pentru orice dezvoltator de kernel.
+## BIOS Parameter Block
+**BIOS Parameter Block** este o structura care defineste layout-ul fizic al memoriei in calculator. Pentru ca ISO-ul nostru sa poata boota pe orice masina fizica, trebuie sa umplem BIOS Parameter Block cu 0. Structura completa are 33 bytes si pentru a o umple din bootloader, inainte sa intram in code segment, va trebui sa folosim:
+```
+times 33 dw 0
+```
+
+## Burn ISO pe USB
+Odata ce avem ISO-ul, putem sa il copiem pe disk folosind utilitarul `dd`:
+```
+sudo dd if=./boot.bin of=/dev/sdb
+```
+Presupunem ca USB-ul este incarcat in device pe `/dev/sdb`.
 
 # Assembly
 Exemplu registru EAX:
@@ -55,7 +67,27 @@ push 0xffff
 Stack pointer astfel va fi: `SP` = 0x7BFE
 
 2. Se va seta in intervalul de memorie 0x7BFE-0x7c00 valoarea 0xffff.
+## Jump
+Avem doua tipuri de jump:
+- far jump - sarim la cod assembly din alt modul
+- short jump - sarim la cod assembly din acelasi modul
 
+## Intreruperile
+`Intreruperile` sunt exact ca subrutinele, insa nu trebuie sa stim adresa lor pentru a le apela. Putem folosi numarul unei intreruperi pentru a o apela.
+Procesul unei intreruperi:
+1. Procesul este intrerupt
+2. State-ul vechi al procesului este salvat pe stiva
+3. Intreruperea este executata
+
+**Interrupt vector table** este tabelul care contine toate intreruperile oferite de sistem (256 de intreruperi). Tabelul incepe de la adresa 0 din memoria RAM si fiecare intrerupere contine doua proprietati:
+- offset (2 bytes) - adresa relativa la segmentul de memorie
+- segment (2 bytes) - adresa segmentului de memorie
+Fiecare proprietate descrie unde se afla fiecare intrerupere, iar fiecare intrerupere contine 4 bytes.
+Intreruperile se afla in ordine asa ca, la adresa absoluta din RAM:
+- 0x00 - intreruperea 0
+- 0x04 - intreruperea 1
+- 0x08 - intreruperea 2
+...........
 
 # Compilare
 Pentru a compila bootloader-ul vom folosi:
