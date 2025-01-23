@@ -89,6 +89,22 @@ Intreruperile se afla in ordine asa ca, la adresa absoluta din RAM:
 - 0x08 - intreruperea 2
 ...........
 
+Putem adauga propria noastra definitie pentru fiecare intrerupere:
+```
+; definim rutina care se va apela in intrerupere
+handle_zero:
+    ; vom afisa 'A' pe ecran
+    mov ah, 0eh
+    mov al, 'A'
+    mov bx, 0x00
+    int 0x10
+    iret ; returnam dintr-o subrutina
+
+; setam intreruperea 0
+mov word[ss:0x00], handle_zero ; la adresa 0 din memoria RAM vom arunca in offset-ul intreruperii 0, adresa label-ului `handle_zero`
+mov word[ss:0x02], 0x7c0 ; scriem segmentul de memorie unde se afla definitia intreruperii
+```
+
 # Compilare
 Pentru a compila bootloader-ul vom folosi:
 ```
