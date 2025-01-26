@@ -4,21 +4,49 @@
     "type": "split",
     "children": [
       {
-        "id": "294ba136acf88117",
+        "id": "e620069336adb63d",
         "type": "tabs",
         "children": [
           {
-            "id": "eb2bf1530ee6b2df",
+            "id": "60aa56701c93fe84",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Wiki/Assembly.md",
+                "file": "Wiki/{Mem} Protected-Mode.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Assembly"
+              "title": "{Mem} Protected-Mode"
+            }
+          },
+          {
+            "id": "19029c6108397e59",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Wiki/{Basics} Assembly.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "{Basics} Assembly"
+            }
+          },
+          {
+            "id": "6aa475dcb0ed96a3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Wiki/{Basics} Compilare.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "{Basics} Compilare"
             }
           }
         ]
@@ -93,7 +121,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Wiki/Assembly.md",
+                "file": "Wiki/{Mem} Protected-Mode.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,7 +131,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Assembly"
+              "title": "Backlinks for {Mem} Protected-Mode"
             }
           },
           {
@@ -112,12 +140,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Wiki/Assembly.md",
+                "file": "Wiki/{Mem} Protected-Mode.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Assembly"
+              "title": "Outgoing links from {Mem} Protected-Mode"
             }
           },
           {
@@ -139,10 +167,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Wiki/Assembly.md"
+                "file": "Wiki/{Mem} Protected-Mode.md"
               },
               "icon": "lucide-list",
-              "title": "Outline of Assembly"
+              "title": "Outline of {Mem} Protected-Mode"
             }
           }
         ]
@@ -162,13 +190,21 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "eb2bf1530ee6b2df",
+  "active": "60aa56701c93fe84",
   "lastOpenFiles": [
-    "Wiki/Compilare.md",
-    "Wiki/General.md",
-    "Wiki/Real-Mode.md",
+    "Wiki/{Basics} Compilare.md",
     "Wiki/Referinte.md",
-    "Wiki/Assembly.md",
+    "Wiki/General.md",
+    "Wiki/{Mem} Protected-Mode.md",
+    "Wiki/{Basics} Assembly.md",
+    "boot-protected.asm",
+    "boot-real.asm",
+    "Wiki/{Mem} Real-Mode.md",
+    "Wiki/imgs/page-scheme.png",
+    "Pasted image 20250126122126.png",
+    "Pasted image 20250126122047.png",
+    "Wiki/imgs/protection-rings.png",
+    "Wiki/imgs",
     "Wiki"
   ]
 }

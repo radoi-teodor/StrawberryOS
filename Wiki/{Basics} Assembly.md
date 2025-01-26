@@ -13,8 +13,25 @@ Exemplu registru EAX:
 `DB` - definim un byte (8 biti)
 `DW` - definim un DWORD, 2 bytes pe sistemele x86 (16 biti)
 `DD` - definim un DOUBLE DWORD (32 biti)
+# Label-uri
+In assembly, label-urile sunt blocuri de cod care pot contine atat valori, precum o instanta de struct in C, cat si cod executabil (label-uri numite si subrutine):
+```
+struct:
+	dd 0x0 ; double dword
+	dd 0x0 ; double dword
+```
+De asemenea, numele label-ului poate fi folosit ca placeholder pentru adresa la care este stocata structura/subrutina.
 
-## Segmente de memorie
+**ATENTIE:** Daca dintr-un label nu iesim folosind instructiunea `ret`, CPU-ul se va duce segmential si va executa urmatorul cod, dupa iesirea din label. Exemplu:
+```
+label1:
+	mov ax, 10
+	; alte instructiuni, fara sa terminam cu ret
+
+label2: ; se va trece automat la acest label
+	mov ax, 20
+```
+# Segmente de memorie
 Segmentele de memorie sunt folosite pentru a accesa memoria RAM.
 Registrii:
 - `CS` - code segment
@@ -34,7 +51,7 @@ originea (inceputul memoriei) = 0
 presupunem ca adresa primei instructiuni este 0
 adresa_primei_instructiuni = 0x7c0 * 16 =  0x7c00
 ```
-### Segmentul Stack (Mod de Functionare)
+## Segmentul Stack (Mod de Functionare)
 Presupunem
 - `SS` (stack segment) = 0x00
 - `SP` (stack pointer) = 0x7c00 (fara sa adaugam nimic in stiva, asta este si baza stivei)
@@ -47,12 +64,12 @@ push 0xffff
 Stack pointer astfel va fi: `SP` = 0x7BFE
 
 2. Se va seta in intervalul de memorie 0x7BFE-0x7c00 valoarea 0xffff.
-## Jump
+# Jump
 Avem doua tipuri de jump:
 - far jump - sarim la cod assembly din alt modul
 - short jump - sarim la cod assembly din acelasi modul
 
-## Intreruperile
+# Intreruperile
 `Intreruperile` sunt exact ca subrutinele, insa nu trebuie sa stim adresa lor pentru a le apela. Putem folosi numarul unei intreruperi pentru a o apela.
 Procesul unei intreruperi:
 1. Procesul este intrerupt
