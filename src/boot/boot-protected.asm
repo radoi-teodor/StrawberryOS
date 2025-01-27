@@ -94,6 +94,11 @@ load32:
 	mov ebp, 0x00200000 ; 2097152 bytes - 2 megabytes pentru stiva
 	mov esp, ebp
 
+	; activam A20 line
+	in al, 0x92
+	or al, 2
+	out 0x92, al
+
     ; loop infinit
     jmp $
 

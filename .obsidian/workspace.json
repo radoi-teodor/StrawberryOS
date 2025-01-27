@@ -49,7 +49,8 @@
               "title": "{Basics} Compilare"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -190,13 +191,20 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "60aa56701c93fe84",
+  "active": "6aa475dcb0ed96a3",
   "lastOpenFiles": [
+    "Wiki/{Basics} Assembly.md",
     "Wiki/{Basics} Compilare.md",
+    "Wiki/{Mem} Protected-Mode.md",
+    "bin/boot.bin",
+    "src/boot/boot-real.asm",
+    "src/boot/boot-protected.asm",
+    "src/boot",
+    "bin",
+    "src",
+    "build",
     "Wiki/Referinte.md",
     "Wiki/General.md",
-    "Wiki/{Mem} Protected-Mode.md",
-    "Wiki/{Basics} Assembly.md",
     "boot-protected.asm",
     "boot-real.asm",
     "Wiki/{Mem} Real-Mode.md",
@@ -204,7 +212,6 @@
     "Pasted image 20250126122126.png",
     "Pasted image 20250126122047.png",
     "Wiki/imgs/protection-rings.png",
-    "Wiki/imgs",
-    "Wiki"
+    "Wiki/imgs"
   ]
 }

@@ -141,3 +141,11 @@ load32:
 
 
 Observam ca in `.load_protected` modificam valoarea registrului `CR0` pe 1. Acest registru este cel care seteaza protected-mode in CPU-uri. Setand-ul pe 1, modificam environment-ul in protected.
+
+Un ultim pas este sa activam A20 Line (vezi documentatia: https://wiki.osdev.org/A20_Line#Fast_A20_Gate). Vom folosi o functionalitate disponibila in CPU-urile moderne de a activa A20 Line:
+```
+in al, 0x92
+or al, 2
+out 0x92, al
+```
+A20 Line este o functionalitate care repara problemele de compatibilitate intre real-mode si protected-mode.
