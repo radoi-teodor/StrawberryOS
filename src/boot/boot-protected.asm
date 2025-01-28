@@ -51,6 +51,7 @@ step2:
 	or eax, 0x1 ; setam registrul eax pe 1 (activam protected-mode)
 	mov cr0, eax ; setam cr0 pe 1
 	
+	; jmp $ ; jump infinit
 	jmp CODE_SEG:load32 ; sarim la subrutina care va rula in protected mode
 
 ; setam GDT
@@ -82,25 +83,74 @@ gdt_descriptor:
 	dw gdt_end - gdt_start - 1
 	dd gdt_start
 
-[BITS 32] ; setam subrutina sa ruleze pe 32 de biti
+[BITS 32]
 load32:
-	; vom seta segmentele de memorie
-	mov ax, DATA_SEG
-	mov ds, ax
-	mov es, ax
-	mov fs, ax
-	mov gs, ax
-	mov ss, ax
-	mov ebp, 0x00200000 ; 2097152 bytes - 2 megabytes pentru stiva
-	mov esp, ebp
+	mov eax, 1 ; incepem sa incarcam de la sectorul 1
+	mov ecx, 100 ; numarul total de sectoare pe care citim
+	mov edi, 0x0100000 ; mutam un MB
+	call ata_lba_read
+	; sarim in kernel
+	jmp CODE_SEG:0x0100000
 
-	; activam A20 line
-	in al, 0x92
-	or al, 2
-	out 0x92, al
+ata_lba_read:
+	mov ebx, eax ; facem backup primului sector pe care vrem sa il citim
 
-    ; loop infinit
-    jmp $
+	; trimitem primii 8 biti catre controller-ul de hard disk
+	shr eax, 24 ; muta bitii din EAX 24 de biti la stanga (bitshift)
+	or eax, 0xE0 ; selectam drive-ul master
+	mov dx, 0x1F6
+	out dx, al
+	; am trimis primii 8 biti catre controller-ul de hard disk
+
+	; trimitem sectoarele totale de citit
+	mov eax, ecx
+	mov dx, 0x1F2
+	out dx, al
+	; am trimis sectoarele totale de citit
+
+	; trimitem mai multi biti din LBA
+	mov eax, ebx
+	mov dx, 0x1F2
+	out dx, al
+	; am trimis mai multi biti din LBA
+
+
+	mov dx, 0x1F2
+	mov eax, ebx ; facem restore LBA
+	shr eax, 8
+	out dx, al
+
+	mov dx, 0x1F2
+	mov eax, ebx ; facem restore LBA
+	shr eax, 16
+	out dx, al
+
+	mov dx, 0x1F2
+	mov al, 0x20
+	out dx, al
+
+; citim toate sectoarele in memorie
+.next_sector:
+	push ecx
+
+; verificam de ce avem nevoie sa citim
+.try_again:
+	mov dx, 0x1F7
+	in al, dx
+	test al, 0
+	jz .try_again
+
+	; citim cate 256 de bytes
+	mov ecx, 256
+	mov dx, 0x1F0
+	rep insw
+	pop ecx
+
+	; vom trece la urmatorul sector
+	loop .next_sector
+
+	; am terminat de citit
+	ret
 
 ; times afiseaza de un numar de ori o valoare - vom umple pana la 512 bytes cu valoarea 0
 times 510-($ - $$) db 0
